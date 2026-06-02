@@ -1,6 +1,6 @@
 # SQL examples — question to query
 
-## Example 1: Kohli ODI strike rate
+## Example 1: Kohli ODI strike rate (career — all overs, no powerplay filter)
 Question: What is Kohli's strike rate in ODIs?
 ```sql
 SELECT ROUND(100.0 * SUM(runs_batter) /

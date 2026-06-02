@@ -39,3 +39,7 @@ Always use exact names from players table. Examples:
 
 ## over_num is 0-indexed
 over_num 0 = 1st over. First 6 overs T20 powerplay = over_num <= 5.
+
+## When to filter by over_num
+- "strike rate in ODI" / "economy in T20" = ALL overs — do NOT filter over_num
+- Only filter when user says powerplay, first 6/10 overs, death overs, etc.
