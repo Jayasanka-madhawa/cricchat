@@ -1,0 +1,6 @@
+all_json.zip
+.venv/
+__pycache__/
+.DS_Store
+output/
+db/
