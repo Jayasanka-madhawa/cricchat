@@ -2,5 +2,9 @@ all_json.zip
 .venv/
 __pycache__/
 .DS_Store
+.cache/
+chroma_db/
+data/
 output/
 db/
+*.parquet
