@@ -9,3 +9,6 @@ output/
 db/
 *.parquet
 .env
+node_modules/
+frontend/.next/
+frontend/.env.local
