@@ -25,3 +25,11 @@ CHROMA_DIR = ROOT / "chroma_db"
 COLLECTION_NAME = "cricchat_knowledge"
 
 RAG_TOP_K = 4
+
+# Comma-separated browser origins (Vercel, local dev)
+_default_cors = "http://localhost:3000,http://127.0.0.1:3000"
+CORS_ORIGINS = [
+    o.strip()
+    for o in os.getenv("CORS_ORIGINS", _default_cors).split(",")
+    if o.strip()
+]
