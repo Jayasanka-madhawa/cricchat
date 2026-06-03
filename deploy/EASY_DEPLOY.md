@@ -46,11 +46,11 @@ Vercel (frontend)  →  Render (FastAPI Docker)  →  AWS RDS (database-1)
 | `DATABASE_URL` | `postgresql://postgres:YOUR_PASSWORD@database-1.ch8wa2ai4vzv.eu-north-1.rds.amazonaws.com:5432/cricchat?sslmode=require` |
 | `OPENAI_API_KEY` | from local `.env` |
 | `OPENAI_MODEL` | `gpt-4o-mini` |
-| `CORS_ORIGINS` | `http://localhost:3000` *(update after Vercel)* |
+| `CORS_ORIGINS` | `https://cricchat.vercel.app,http://localhost:3000` |
 | `XDG_CACHE_HOME` | `/app/.cache` |
 
 5. **Create Web Service** — first deploy ~10–15 min (Docker + Chroma build)
-6. Copy URL: `https://cricchat-api.onrender.com` (yours may differ)
+6. Copy URL: `https://cricchat.onrender.com` (yours may differ)
 
 ### Test Render
 
@@ -83,9 +83,13 @@ curl -X POST https://YOUR_RENDER_URL/chat \
 
 ## Part 4 — Fix CORS
 
-1. **Render** → `cricchat-api` → **Environment**
-2. Set `CORS_ORIGINS` to your Vercel URL, e.g. `https://cricchat.vercel.app`
-3. **Manual Deploy** → wait for redeploy
+The API reads `CORS_ORIGINS` from env (`backend/config.py`). Comma-separated.
+
+1. **Render** → **cricchat** → **Environment**
+2. `CORS_ORIGINS` = `https://cricchat.vercel.app,http://localhost:3000` (exact Vercel URL, no trailing `/`)
+3. **Save** → **Manual Deploy**
+
+If you change CORS in code, `git push` to redeploy.
 
 ---
 
