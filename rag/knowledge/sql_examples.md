@@ -127,3 +127,24 @@ SELECT match_id, MIN(ball_num) AS balls_to_50
 FROM balls WHERE cumulative_runs >= 50
 GROUP BY match_id, innings_num;
 ```
+
+## Example 13: Centuries for a batter
+Question: How many centuries has Kusal Mendis scored?
+```sql
+WITH innings AS (
+    SELECT match_id, innings_num, SUM(runs_batter) AS runs
+    FROM deliveries
+    WHERE batter = 'MDKJ Mendis'
+    GROUP BY match_id, innings_num
+)
+SELECT COUNT(*) AS centuries
+FROM innings
+WHERE runs >= 100;
+```
+
+## Example 14: Find player by partial name
+Question: What is the Cricsheet name for Kusal Mendis?
+```sql
+SELECT player_name FROM players
+WHERE player_name ILIKE '%mendis%' AND player_name ILIKE '%k%';
+```

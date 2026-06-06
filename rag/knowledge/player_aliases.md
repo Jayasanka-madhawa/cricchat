@@ -35,4 +35,7 @@ anderson → JM Anderson
 jadeja → RA Jadeja
 bumrah → JJ Bumrah
 
+kusal mendis → MDKJ Mendis
+mendis → MDKJ Mendis
+
 When unsure, search: SELECT player_name FROM players WHERE player_name ILIKE '%kohli%';

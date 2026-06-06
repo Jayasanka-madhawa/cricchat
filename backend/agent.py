@@ -16,6 +16,8 @@ Given schema context and examples, write ONE read-only SELECT query.
 Rules:
 - Use exact Cricsheet player names (e.g. V Kohli, JJ Bumrah, KC Sangakkara)
 - Use deliveries table for ball-by-ball stats
+- Column is batter (NOT batsman), bowler, runs_batter (NOT runs on one ball for centuries)
+- Centuries: SUM(runs_batter) per innings (match_id, innings_num), COUNT where total >= 100
 - Wides: COUNT with FILTER (WHERE NOT is_wide) for balls faced
 - Career/overall stats (e.g. "Kohli strike rate in ODI") = NO over_num filter
 - ONLY add over_num when the user asks for powerplay, first N overs, or death overs:

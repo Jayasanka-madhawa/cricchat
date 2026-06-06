@@ -9,7 +9,7 @@
 | over_num | INT | 0-indexed (0 = 1st over, 5 = 6th over) |
 | batting_team | TEXT | Team batting this innings |
 | bowling_team | TEXT | Team bowling |
-| batter | TEXT | Striker (Cricsheet name e.g. V Kohli) |
+| batter | TEXT | Striker (Cricsheet name e.g. V Kohli). Column is **batter** — NOT batsman |
 | non_striker | TEXT | Partner at other end (partnership queries) |
 | bowler | TEXT | Bowler (e.g. JJ Bumrah) |
 | runs_batter | INT | Runs off the bat |

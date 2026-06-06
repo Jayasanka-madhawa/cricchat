@@ -12,6 +12,19 @@ SUM(runs_batter) grouped by batter, match_type
 ## Balls faced
 COUNT(*) FILTER (WHERE NOT is_wide) WHERE batter = 'X'
 
+## Centuries (100+ in an innings)
+Sum runs_batter per (match_id, innings_num), then COUNT innings WHERE total >= 100.
+NOT runs_total = 100 on one ball — that is wrong.
+
+```sql
+WITH innings AS (
+  SELECT match_id, innings_num, SUM(runs_batter) AS runs
+  FROM deliveries WHERE batter = 'X'
+  GROUP BY match_id, innings_num
+)
+SELECT COUNT(*) AS centuries FROM innings WHERE runs >= 100;
+```
+
 ## Bowling economy (runs per over)
 SUM(runs_total) / (COUNT(*) FILTER (WHERE NOT is_wide) / 6.0)
 
