@@ -21,7 +21,11 @@ def validate_sql(sql: str) -> str:
         if match:
             sql = match.group(1).strip()
 
-    if not sql.upper().startswith("SELECT"):
+    upper = sql.upper().lstrip()
+    # Allow CTEs: WITH innings AS (...) SELECT ...
+    if not (upper.startswith("SELECT") or upper.startswith("WITH")):
+        raise ValueError("Only SELECT queries are allowed.")
+    if upper.startswith("WITH") and "SELECT" not in upper:
         raise ValueError("Only SELECT queries are allowed.")
 
     if FORBIDDEN.search(sql):

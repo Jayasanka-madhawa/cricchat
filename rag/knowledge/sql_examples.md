@@ -148,3 +148,17 @@ Question: What is the Cricsheet name for Kusal Mendis?
 SELECT player_name FROM players
 WHERE player_name ILIKE '%mendis%' AND player_name ILIKE '%k%';
 ```
+
+## Example 15: Half-centuries (50–99, excluding 100+)
+Question: How many half centuries has Kusal Mendis scored?
+```sql
+WITH innings AS (
+    SELECT match_id, innings_num, SUM(runs_batter) AS runs
+    FROM deliveries
+    WHERE batter = 'MDKJ Mendis'
+    GROUP BY match_id, innings_num
+)
+SELECT COUNT(*) AS half_centuries
+FROM innings
+WHERE runs >= 50 AND runs < 100;
+```

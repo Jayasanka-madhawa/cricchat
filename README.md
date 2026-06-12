@@ -5,7 +5,7 @@ Ask cricket stats in plain English — powered by Cricsheet ball-by-ball data, P
 **Examples:** *Kohli strike rate in ODI* · *Bumrah economy in T20 powerplay* · *Sangakkara when Mahela is non-striker*
 
 ---
-
+ 
 ## Quick links
 
 | Doc | For |
