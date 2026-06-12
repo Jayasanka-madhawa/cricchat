@@ -15,6 +15,8 @@ COUNT(*) FILTER (WHERE NOT is_wide) WHERE batter = 'X'
 ## Centuries (100+ in an innings)
 Sum runs_batter per (match_id, innings_num), then COUNT innings WHERE total >= 100.
 NOT runs_total = 100 on one ball — that is wrong.
+NEVER use `COUNT(*) FILTER (WHERE SUM(runs_batter) >= 100)` — nested aggregates are invalid.
+Always use a CTE first, then aggregate on the CTE result.
 
 ```sql
 WITH innings AS (
@@ -23,6 +25,13 @@ WITH innings AS (
   GROUP BY match_id, innings_num
 )
 SELECT COUNT(*) AS centuries FROM innings WHERE runs >= 100;
+```
+
+For total runs + centuries together, aggregate from the same CTE:
+```sql
+SELECT SUM(runs) AS total_runs,
+       COUNT(*) FILTER (WHERE runs >= 100) AS centuries
+FROM innings;
 ```
 
 ## Bowling economy (runs per over)

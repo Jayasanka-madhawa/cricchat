@@ -29,7 +29,13 @@ steve smith → SPD Smith
 
 root → JE Root
 williamson → KS Williamson
+kane → KS Williamson
+kane williamson → KS Williamson
 babar → Babar Azam
+babar azam → Babar Azam
+de villiers → AB de Villiers
+ab de villiers → AB de Villiers
+gayle → CH Gayle
 
 anderson → JM Anderson
 jadeja → RA Jadeja

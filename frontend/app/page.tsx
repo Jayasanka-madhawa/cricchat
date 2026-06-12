@@ -15,12 +15,26 @@ type Message =
       error?: boolean;
     };
 
+type ChatApiMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 type ChatApiResponse = {
   question: string;
   answer: string;
   sql: string;
   row_count: number;
 };
+
+function toApiMessages(messages: Message[]): ChatApiMessage[] {
+  return messages
+    .filter((m) => !("error" in m && m.error))
+    .map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+}
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -30,14 +44,18 @@ export default function Home() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   async function sendQuestion(question: string) {
-    setMessages((m) => [...m, { role: "user", content: question }]);
+    const nextMessages: Message[] = [
+      ...messages,
+      { role: "user", content: question },
+    ];
+    setMessages(nextMessages);
     setLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ messages: toApiMessages(nextMessages) }),
       });
 
       const data = await res.json();

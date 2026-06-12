@@ -162,3 +162,28 @@ SELECT COUNT(*) AS half_centuries
 FROM innings
 WHERE runs >= 50 AND runs < 100;
 ```
+
+## Example 16: Verify player exists and show runs by format (data coverage check)
+Question: Does Kane Williamson have data? Show his runs by format.
+```sql
+SELECT batter, match_type, SUM(runs_batter) AS runs,
+       COUNT(*) FILTER (WHERE NOT is_wide) AS balls_faced
+FROM deliveries
+WHERE batter = 'KS Williamson'
+GROUP BY batter, match_type
+ORDER BY runs DESC;
+```
+
+## Example 17: Total runs and centuries for a batter (use CTE — do NOT nest SUM in FILTER)
+Question: Kohli total runs and centuries in all formats
+```sql
+WITH innings AS (
+    SELECT match_id, innings_num, SUM(runs_batter) AS runs
+    FROM deliveries
+    WHERE batter = 'V Kohli'
+    GROUP BY match_id, innings_num
+)
+SELECT SUM(runs) AS total_runs,
+       COUNT(*) FILTER (WHERE runs >= 100) AS centuries
+FROM innings;
+```

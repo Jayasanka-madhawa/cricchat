@@ -14,11 +14,13 @@ Test:
       -d '{"question": "Kohli strike rate in ODI"}'
 """
 
+from typing import Literal
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
 
-from backend.agent import ask
+from backend.agent import ask, ask_with_messages
 from backend.config import CORS_ORIGINS
 
 app = FastAPI(title="CricChat", version="0.1.0")
@@ -32,8 +34,22 @@ app.add_middleware(
 )
 
 
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
 class ChatRequest(BaseModel):
-    question: str
+    question: str | None = None
+    messages: list[ChatMessage] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_question_or_messages(self):
+        has_question = bool(self.question and self.question.strip())
+        has_messages = bool(self.messages)
+        if not has_question and not has_messages:
+            raise ValueError("Provide either question or messages.")
+        return self
 
 
 class ChatResponse(BaseModel):
@@ -50,16 +66,33 @@ def health():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
-    question = req.question.strip()
-    if not question:
-        raise HTTPException(status_code=400, detail="Question cannot be empty.")
-
     try:
-        result = ask(question)
+        if req.messages:
+            if req.messages[-1].role != "user":
+                raise HTTPException(
+                    status_code=400,
+                    detail="The latest message must be from the user.",
+                )
+            latest = req.messages[-1].content.strip()
+            if not latest:
+                raise HTTPException(status_code=400, detail="Question cannot be empty.")
+            history = [
+                {"role": m.role, "content": m.content.strip()}
+                for m in req.messages
+                if m.content.strip()
+            ]
+            result = ask_with_messages(history)
+        else:
+            question = (req.question or "").strip()
+            if not question:
+                raise HTTPException(status_code=400, detail="Question cannot be empty.")
+            result = ask(question)
     except FileNotFoundError as e:
         raise HTTPException(status_code=503, detail=str(e))
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
